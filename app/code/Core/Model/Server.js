@@ -10,6 +10,8 @@
 
 const http = require('http');
 const https = require('https');
+const url = require('url');
+const AppServer = require('./../../ObjectPool');
 
 	class Server 
 	{
@@ -52,39 +54,72 @@ const https = require('https');
 		}
 		listen() {
 
-			this.state.http = http.createServer( ( req , res ) => {
-				this.emit( 'request' , {
-					request: req , 
-					response: res
-				} );
-				this.emit( 'secure-request' , {
-					request: req
-				} );
+			return new Promise((resolve , reject) => {
+				try{
+					this.state.http = http.createServer( ( req , res ) => {
+					
+						try{
+							this.routeToController(req , res);
+						}catch(e){
+						  	res.end('<h1>Timed out</h1>');
+						}
 
-				setTimeout( () => {
-					 
-					  response.end('<h1>Timed out</h1>');
+					} ).listen( this.listeningOn.unsecure );
+					
+					this.state.https = https.createServer( ( req , res ) => {
+						
+						try{
+							this.routeToController(req , res);
+						}catch(e){
+						  	res.end('<h1>Timed out</h1>');
+						}
 
-				} , this.defaultConfig.SERVER_TIMEOUT * 1000 );
+					} ).listen( this.listeningOn.secure );
+					resolve(this);
+				}catch(e)
+				{
+					reject(e);
+				}
 
-			} ).listen( this.listeningOn.unsecurePort );
-			
-			this.state.https = https.createServer( ( req , res ) => {
-				this.emit( 'request' , {
-					request: req , 
-					response: res
-				} );
-				this.emit( 'unsecure-request' , {
-					request: req
-				} );
+			});
+		}
+		routeToController( req , res ){
 
-				setTimeout( () => {
-					 
-					  response.end('<h1>Timed out</h1>');
+			let requestPath = url.parse(req.url).pathname;
+			// now we split this into module/controller/action
+			let info = {
+				module: "App" , 
+				controller: "Dashboard" , 
+				action: "Index"
+			}
+			let filtered = [];
+			requestPath.split( '/' )
+					   .forEach( ( part , idx ) => {
+					   		if(part == '')
+					   		{
+					   			return;
+					   		}
+					   		filtered.push( part );
+					   });
 
-				} , this.defaultConfig.SERVER_TIMEOUT * 1000 );
+			info['module'] = filtered[0] ?? 'App';
+			info['controller'] = filtered[1] ?? 'Dashboard';
+			info['action'] = filtered[2] ?? 'Index';
 
-			} ).listen( this.listeningOn.securePort );
+			try{
+				let controller = AppServer.getController( info['module'].toLowerCase() + '/' + info['controller'].toLowerCase() );
+
+				let inst = new controller( req , res );
+
+				inst[info['action'] + 'Action']();
+			}catch(e)
+			{
+				let inst = AppServer.getController('error/page404');
+
+				let controller = new inst( req , res );
+				controller.execute( e );
+			}
+
 		}
 		close(){
 			this.state.http.close();

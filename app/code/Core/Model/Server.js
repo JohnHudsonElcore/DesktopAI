@@ -11,7 +11,7 @@
 const http = require('http');
 const https = require('https');
 const url = require('url');
-const AppServer = require('./../../ObjectPool');
+const Pool = require('./../../ObjectPool');
 
 	class Server 
 	{
@@ -107,14 +107,14 @@ const AppServer = require('./../../ObjectPool');
 			info['action'] = filtered[2] ?? 'Index';
 
 			try{
-				let controller = AppServer.getController( info['module'].toLowerCase() + '/' + info['controller'].toLowerCase() );
+				let controller = Pool.getController( info['module'].toLowerCase() + '/' + info['controller'].toLowerCase() );
 
 				let inst = new controller( req , res );
 
 				inst[info['action'] + 'Action']();
 			}catch(e)
 			{
-				let inst = AppServer.getController('error/page404');
+				let inst = Pool.getController('error/page404');
 
 				let controller = new inst( req , res );
 				controller.execute( e );

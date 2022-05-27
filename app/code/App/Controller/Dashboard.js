@@ -7,6 +7,7 @@ class Dashboard extends Controller
 
 	IndexAction()
 	{
+		this.loadLayout();
 		this.getResponse().end('<p>Welcome to the dashboard</p>');
 	}
 }

@@ -11,7 +11,7 @@
 const http = require('http');
 const https = require('https');
 const url = require('url');
-const AppServer = require('./../../ObjectPool');
+const Pool = require('./../../ObjectPool');
 const fs = require('fs');
 const { dirname } = require('path');
 const path = require('path');
@@ -260,14 +260,14 @@ const path = require('path');
 			info['action'] = filtered[2] ?? 'Index';
 
 			try{
-				let controller = AppServer.getController( info['module'].toLowerCase() + '/' + info['controller'].toLowerCase() );
+				let controller = Pool.getController( info['module'].toLowerCase() + '/' + info['controller'].toLowerCase() );
 
 				let inst = new controller( req , res );
 				inst.setPostData(rawPost);
 				inst[info['action'] + 'Action']();
 			}catch(e)
 			{
-				let inst = AppServer.getController('error/page404');
+				let inst = Pool.getController('error/page404');
 
 				let controller = new inst( req , res );
 				controller.execute( e + " - Action Called: " + info['action'] + 'Action');

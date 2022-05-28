@@ -1,3 +1,7 @@
 [
-	{"id": "body" , "template": "defaults/blank.html"}
+	{"id": "head" , "template": "blocks/head.html"} , 
+	{"id": "body" , "template": "blocks/body.html" , 
+	 "children": [
+	 	{"id" : "topbar" , "template": "blocks/topbar.html"}
+	]}
 ]

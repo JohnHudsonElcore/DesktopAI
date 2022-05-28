@@ -5,11 +5,12 @@
   "main": "launcher.js",
   "dependencies": {
     "electron": "^19.0.1",
+    "ip": "^1.1.8",
     "mysql": "^2.18.1"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "test" , 
+    "test": "test",
     "start": "electron . "
   },
   "repository": {

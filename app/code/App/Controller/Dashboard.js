@@ -8,7 +8,14 @@ class Dashboard extends Controller
 	IndexAction()
 	{
 		this.loadLayout();
-		this.getResponse().end('<p>Welcome to the dashboard</p>');
+
+		this.block('head').setData('title' , 'Dashboard');
+		
+		this.renderLayout();
+	}
+	isProtectedPage()
+	{
+		return true;
 	}
 }
 

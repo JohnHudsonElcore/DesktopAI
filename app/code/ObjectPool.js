@@ -2,14 +2,26 @@ class ObjectPool
 {
 
 	//example: core/server -> Core/Model/Server
+	/**
+	 * @param {String} shortcode - the class shortcode
+	 * @return {Mixed}
+	 */
 	static getModel(shortcode)
 	{
 		return ObjectPool._getObj(shortcode , 'Model');
 	}
+	/**
+	 * @param {String} shortcode - the class shortcode
+	 * @return {Mixed}
+	 */
 	static getController(shortcode)
 	{
 		return ObjectPool._getObj(shortcode , 'Controller');
 	}
+	/**
+	 * @param {String} shortcode - the class shortcode
+	 * @return {Mixed}
+	 */
 	static getBlock(shortcode)
 	{
 		return ObjectPool._getObj(shortcode , 'Block')
@@ -18,6 +30,9 @@ class ObjectPool
 
 	/**
 	 * @description - This should not be used by anyone, this is primarily a "private" method. 
+	 * @param {String} shortcode - Example: core/controller -> app/code/Core/${type}/Controller
+	 * @param {String} type - Defaults to Model, basically what folder to search for the class.
+	 * @return {Mixed|Object}
 	*/
 	static _getObj(shortcode , type = 'Model')
 	{
@@ -42,6 +57,10 @@ class ObjectPool
 	{
 		return str[0].toUpperCase() + str.substring( 1 , str.length );
 	}
+	/**
+	 * @param {String} str - the string to capitalize words on
+	 * @return {String}
+	 */
 	static UppercaseWords(str)
 	{
 		let out = [];

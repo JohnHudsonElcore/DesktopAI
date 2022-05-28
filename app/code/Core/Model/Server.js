@@ -102,7 +102,6 @@ const path = require('path');
 
 			if(fs.existsSync(name) && !fs.lstatSync(name).isDirectory() )
 			{
-				console.log("!Directory: " + name)
 				this.serveStatic(name , res);
 				return;
 			}
@@ -215,7 +214,6 @@ const path = require('path');
 			    s.on('open', function () {
 			        response.setHeader('Content-Type', type);
 			        s.pipe(response);
-			        console.log('Piped');
 			    });
 			    s.on('error', function (e) {
 			        response.setHeader('Content-Type', 'text/plain');

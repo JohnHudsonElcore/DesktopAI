@@ -62,7 +62,11 @@ class ObjectPool
 	*/
 	static Root()
 	{
-		return dirname(require.main.filename) + '/';
+		if(require.main){
+			return dirname(require.main.filename) + '/';
+		}else{
+			return process.cwd() + '/';
+		}
 	}
 	/**
 	 * @description - This should not be used by anyone, this is primarily a "private" method. 

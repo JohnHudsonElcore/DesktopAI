@@ -14,5 +14,7 @@ build
 .env
 npm-debug.log
 var/session
+var/config
 bin/mysql
+bin/julius
 tmp

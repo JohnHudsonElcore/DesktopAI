@@ -28,6 +28,7 @@ class AppWindow
 			transparent: true , 
 			icon: ObjectPool.Root() + '/app/media/app_drawer.png'
 		});
+		this.window.toggleDevTools();
 		this.window.setMenu(null);
 		this.window.loadFile('app/desktopclient/index.html');
 

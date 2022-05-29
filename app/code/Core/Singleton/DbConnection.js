@@ -149,7 +149,7 @@ class DbConnection
 		});
 
 		ls.on('close', (code) => {
-		  console.log("MySQL Exited");
+		  console.log("MySQL Exited: " + code);
 		});
 		
 	}

@@ -54,6 +54,20 @@
 			.titlebar .git:hover{
 				background: rgba(255 , 255 , 255 , 0.1);
 			}
+			.content{
+				position: absolute;top: 50px;left: 0px;right: 0px;bottom: 0px;
+			}
+			.stt-widget{
+				position: absolute;top: 0px;left: 0px;right: 0px;height: 150px;background: #222222AB;
+			}
+			.current-word{
+				position: absolute;
+				top: 50px;left: 0px;width: 100%;
+				text-align: center;
+				color: #eee;
+				font-family: 'Sengoa',sans-serif;
+				margin: 0px;
+			}
 		</style>
 		<script>
 			function openGithub()
@@ -65,15 +79,31 @@
 					alert(e);
 				}
 			}
+			window.onerror = (error) =>	{
+				alert(error)
+			}
+			window.ObjectPool = require('./../code/ObjectPool');
+
+			window.Speech = ObjectPool.getSingleton('voice/recognition');
+
+			
 		</script>
 	</head>
 	<body>
 		<div class="app-window">
 			<div class="titlebar">
-				<p>DesktopAI</p>
+				<p onclick="location.reload();">DesktopAI</p>
 				<button onclick="openGithub()" class="git" onclick=""><i class="fab fa-github"></i> Github</button>
 				<button class="reload" onclick="minimizeWindow()"><i style="position: relative;top: -5px;" class="fas fa-window-minimize"></i></button>
 				<button class="close" onclick="minimizeWindow();"><i class="fas fa-xmark"></i></button>
+			</div>
+			<div class="content">
+
+				<div class="stt-widget">
+					<button onclick="location.reload();">reload</button>
+					<h1 class="current-word">Say {{hotword}}</h1>
+				</div>
+
 			</div>
 		</div>
 	</body>

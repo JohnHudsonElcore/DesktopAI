@@ -1,0 +1,517 @@
+<html>
+	<head>
+		<title>Installer | DesktopAI</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+		<link href="https://fonts.cdnfonts.com/css/sengoa" rel="stylesheet">
+		<style>
+			.app-window{
+				position: absolute;top: 0px;left: 0px;right: 0px;bottom: 0px;background: #01031f;
+				border-radius: 12px;
+				overflow: hidden;
+			}
+			.titlebar{
+				position: absolute;top: 0px;left: 0px;right: 0px;height: 49px;
+				line-height: 45px;color: #fff;
+				-webkit-app-region: drag;
+				border-bottom: 1px solid #ffffff25;
+			}
+			.titlebar p{
+				margin: 0px;
+				position: absolute;top: 0px;left: 0px;width: calc(100% - 45px);
+				height: 50px;
+				line-height: 50px;color: #fff;
+				font-family: 'Sengoa' , sans-serif;
+				font-size: 12px;
+				text-indent: 20px;
+				letter-spacing: 1.2px;
+			}
+			.titlebar button{
+				width: 45px;
+				height: 45px;
+				color: #eee;
+				border: 0px;
+				background: transparent;
+				cursor: pointer;
+				position: absolute;
+				top: 0px;
+				font-size: 19px;
+				z-index: 8000;
+				-webkit-app-region: no-drag;
+			}
+			.titlebar .reload{
+				right: 35px;
+				line-height: 48px;
+			}
+			.titlebar .close{
+				right: 0px;
+			}
+			.titlebar .git{
+				right: 90px;width: 120px;font-size: 12px;border: 1px solid #fff;
+				border-radius: 3px;
+				top: 12.5px;
+				height: 25px;
+			}
+			.titlebar .git:hover{
+				background: rgba(255 , 255 , 255 , 0.1);
+			}
+			.checklist{
+				position: absolute;top: 45px;left: 15px;width:250px;bottom: 15px;border-radius: 12px;list-style-type: none;padding-top: 25px;
+			}
+			.checklist li{
+				text-align: center;
+				color: #fff;
+				font-family: 'Sengoa' , sans-serif;
+				line-height: 40px;
+				font-size: 13px;
+				width: 100%;
+			}
+			.checklist li span.status{
+				color: #fff;
+				height: 40px;
+				line-height: 40px;
+			}
+			.checklist li i.fa-cancel{
+				color: #A11818;
+			}
+			.checklist li i.fa-check{
+				color: #66bc69;
+			}
+			.vertical-line{
+				width: 1px;
+				background: #fff;
+				margin: 0 auto;
+				height: 50px;
+				margin-bottom: 20px;
+				margin-top: 20px;
+			}
+			.checklist button , .current-activity button{
+				margin: 0 auto;
+				margin-top: 50px;
+				width: 80%;
+				position: relative;
+				left: 10%;
+				height: 40px;
+				color: #fff;
+				background: #2196f3;
+				border-radius: 4px;
+				font-size: 12px;
+				border: 0px;
+				font-weight: bold;
+				cursor: pointer;
+			}
+			.checklist button[disabled] , .current-activity button[disabled]{
+				background: #0a2d49;
+				cursor: not-allowed;
+			}
+			.current-activity{
+				position: absolute;top: 50px;left: 270px;right: 0px;bottom: 0px;background: #071e31;border-left: 1px solid #ffffff25;
+			}
+			.installer-head{
+				position: absolute;top: 0px;left: 0px;right: 0px;height: 100px;
+				background: #145a92;
+				color: #fff;
+				border-bottom-left-radius: 16px;
+				border-bottom-right-radius: 16px;
+			}
+			.installer-head h2{
+				position: absolute;top: 20px;left: 30px;font-family: 'Sengoa',sans-serif;margin: 0px;
+			}
+			.installer-head p{
+				position: absolute;bottom: 20px;left: 30px;font-family: 'Sengoa',sans-serif;margin: 0px;font-size: 11px;
+			}
+			.installer-body{
+				position: absolute;top: 110px;left: 10px;right: 10px;bottom: 10px;color: #fff;font-family: 'Sengoa',sans-serif;
+			}
+			.installer-body p{
+				margin: 0px;
+				padding: 10px;
+				font-size: 11px;
+				letter-spacing: 2px;
+			}
+			.data{
+				margin: 10px;
+				width: calc(100% - 20px);
+				color: #fff;
+				border-collapse: collapse;
+			}
+			.data thead > tr > td:nth-child(1){
+				border-top-left-radius: 14px;
+			}
+			.data thead tr > td:nth-last-child(1)
+			{
+				border-top-right-radius: 14px;
+			}
+			.data thead td{
+				background: #01031f;
+				color: #fff;
+				text-align: center;
+				height: 40px;
+				font-size: 11px;
+			}
+			.data tbody td{
+				height: 40px;
+				text-align: center;
+				font-size: 11px;
+				border-bottom: 1px solid #000000;
+			}
+			.data tbody tr{
+				border-left: 1px solid #000;
+				border-right: 1px solid #000;
+			}
+			.form{
+				margin-top: 20px;
+				margin-bottom: 20px;
+				width: 100%;
+			}
+			.form .label{
+				color: #fff;
+				width: calc(25% - 10px);
+				padding-right: 10px;
+				text-align: right;
+			}
+			.form input{
+				width: 100%;
+				height: 40px;
+				color: #fff;
+				background: rgba(0 , 0 , 0 , 0.3);
+				text-indent: 15px;
+				border: 0px;
+				outline: 0px;
+			}
+		</style>
+		<script>
+			window.onerror = (e) => {
+				alert(e);
+			}
+			function openGithub()
+			{
+				try{
+					require("electron").shell.openExternal("https://github.com/JohnHudsonElcore/DesktopAI/");
+				}catch(e)
+				{
+					alert(e);
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<script>
+
+			const fs = require('fs');
+			const { dirname } = require('path');
+			function getDownloadRequirements()
+			{
+				let requirements = [];
+
+				if(!fs.existsSync('../../bin/mysql'))
+				{
+					requirements.push(['mysql' , 'https://elcore.co.uk/desktopai/dependencies/mysql.zip']);
+				}
+
+				let out = `<table class="data">
+					<thead>
+						<tr>
+							<td>Dependency</td>
+							<td>Downloaded?</td>
+							<td>Progress</td>
+							<td>Actions</td>
+						</tr>
+					</thead>
+					<tbody>`;
+
+					requirements.forEach( ( requirement ) => {
+						out += `
+							<tr dlurl="${requirement[1]}" dependency="${requirement[0]}">
+								<td>${requirement[0]}</td>
+								<td>No</td>
+								<td id="download-completed">Not started</td>
+								<td><button style="margin:0px;" onclick="InstallDependency(this.parentNode.parentNode)">Install</button></td>
+							</tr>
+						`;
+					} );
+				
+				out += `</tbody></table>`;
+
+				return out;
+			}
+			function InstallDependency(tr)
+			{
+				let dependency = tr.getAttribute("dependency");
+				let url = tr.getAttribute("dlurl");
+
+				let dependencyInstaller = require('./DependencyManager');
+
+				let inst = new dependencyInstaller(dirname(dirname(__dirname)));
+
+				let manager = inst.downloadDependency({
+					folder: "bin/" + dependency + "/" , 
+					url: url , 
+					installDir: dirname(dirname(__dirname)) + '/bin/mysql/'
+				});
+
+				manager.onUpdate((bytesDownloaded , totalBytes) => {
+					let button = tr.querySelector("button");
+
+					tr.querySelector("#download-completed").textContent = bytesDownloaded + '/' + totalBytes;
+
+					button.removeAttribute("onclick");
+					button.textContent = 'Downloading...';
+				});
+				manager.onComplete(() => {
+					let button = tr.querySelector("button");
+
+					button.removeAttribute("onclick");
+					button.textContent = 'Installing';
+				});
+
+				manager.onInstall(() => {
+					let button = tr.querySelector("button");
+
+					button.removeAttribute("onclick");
+					button.textContent = 'Installed';
+					tr.setAttribute("complete" , "");
+					window.DownloadedDependencies++;
+				})
+
+				manager.start();
+			}
+		</script>
+		<script>
+			window.DownloadedDependencies = 0;
+			window.Installer = {
+				currentView: null , 
+				state: {
+					downloadedRequirements: false , 
+					configuredServer: false , 
+					configuredAdmin: false , 
+					licenseAgreed: false
+				} , 
+				views: {
+					VIEWS_WLCOME_MSG: {
+						title: "Welcome to DesktopAI" , 
+						description: "Lets get you setup!" , 
+						content: `<p>About DesktopAI</p>
+						<p>DesktopAI is a base platform for AI modules, It has multiple security layers and you can
+						control what modules can do, DesktopAI is free software, you'll never have to pay for it. 
+						developers can charge for modules however, no payment is needed for this software. 
+						</p>
+						<p>The concept behind DesktopAI is to allow developers to enter the world of AI, without any
+						extensive setup, have free access to speech-to-text and text-to-speech engines, and help push forward
+						Artificial Intelligence, this software has regular AI models, Machine Learning models and Deep Learning models
+						to create a: a very intelligent system for end users, and b: help developers create AI features.</p>
+
+						<p>I strive for easiness, the software aims to do absolutely every task as simply as possible, with minimum
+						input from users, with one click installs, minimal & beautiful UIs, and as much control as possible</p>
+
+						<button onclick="Installer.setActivityPane(Installer.views.VIEW_DL_REQS);">Get started</button>
+						`	
+					} , 
+					VIEW_DL_REQS: {
+						title: "Requirements" , 
+						description: "Let me download the requirements for your AI" , 
+						content: `${getDownloadRequirements()}`	
+					} , 
+					VIEW_SERVER_CONFIG: {
+						title: "Server Configuration" , 
+						description: "Lets get the server setup, this handles all calls from systems that support DesktopAI" , 
+						content: `
+							<table width="100%" style="color:#fff;">
+								<tbody>
+									<tr>
+										<td style="text-align:center;padding-top:120px;">
+											<h1>Recommended Installation</h1>
+											<button style="margin:0px;position:unset;" onclick="Setup();">Continue</button>
+										</td>
+										<td style="display:none;text-align:center;">
+											<h1>Custom Installation</h1>
+											<button  style="margin:0px;" disabled>Install</button>
+											<p>This is not available yet</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						`	
+					} , 
+					VIEW_CFG_ADMIN: {
+						title: "Master Account" , 
+						description: "The master account has full control of DesktopAI. Lets get you started" , 
+						content: `
+							<table class="form">
+								<tbody>
+									<tr>
+										<td class="label">Your Name</td>
+										<td class="input">
+											<input id="master-name"/>
+										</td>
+									</tr>
+									<tr>
+										<td class="label">Username</td>
+										<td class="input">
+											<input id="master-username"/>
+										</td>
+									</tr>
+									<tr>
+										<td class="label">Password</td>
+										<td class="input">
+											<input id="master-password" type="password"/>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<button onclick="SaveCreds();">Create my account</button>
+						`	
+					} , 
+					VIEW_LICENSE: {
+						title: "License Agreement" , 
+						description: "Basically, dont do anything malicious with this software." , 
+						content: `
+							<p>This software (being DesktopAI) is free and open source, AI has a lot of benefits, 
+							and can also be used for malicious intent, by accepting the license agreement, you agree that
+							any use you get from my system, It is on you. Your responsible for any criminal activity involved 
+							in the use of my software. 
+							</p>
+							<button onclick="createJustInstalledLock();alert('Thank you for using DesktopAI');window.close();">Accept License Agreement</button>
+						`	
+					}
+				} , 
+				update: () => {
+
+					if(!Installer.currentView)
+					{
+						Installer.setActivityPane(Installer.views.VIEWS_WLCOME_MSG);
+						return;
+					}
+					if(Installer.currentView == Installer.views.VIEWS_WLCOME_MSG)
+					{
+						return;
+					}
+					if(document.querySelectorAll("tr[dependency]").length > window.DownloadedDependencies)
+					{
+						if(Installer.currentView == Installer.views.VIEW_DL_REQS)
+						{
+							return;
+						}
+						Installer.setActivityPane(Installer.views.VIEW_DL_REQS);
+						return;
+					}
+					Installer.state.downloadedRequirements = true;
+
+					document.querySelector("li[task='download'] i").className = 'fas fa-check';
+
+					if(Installer.state.downloadedRequirements)
+					{
+						if(Installer.state.configuredAdmin)
+						{
+
+							if(Installer.currentView !== Installer.views.VIEW_LICENSE)
+							{
+								Installer.setActivityPane(Installer.views.VIEW_LICENSE);
+							}
+
+						}else{
+							if(!Installer.state.configuredServer)
+							{
+								if(Installer.currentView !== Installer.views.VIEW_SERVER_CONFIG){
+									Installer.setActivityPane(Installer.views.VIEW_SERVER_CONFIG);
+									return;
+								}
+							}else{
+								if(Installer.currentView !== Installer.views.VIEW_CFG_ADMIN){
+									Installer.setActivityPane(Installer.views.VIEW_CFG_ADMIN);
+								}
+							}
+						}
+					}
+					if(Installer.state.configuredServer){
+						document.querySelector("li[task='config.server'] i").className = 'fas fa-check';
+					}
+					if(Installer.state.configuredAdmin){
+						document.querySelector("li[task='config.adminacc'] i").className = 'fas fa-check';
+					}
+
+
+
+				} , 
+				setActivityPane: (view) => {
+					
+					let {title , description , content} = view;
+
+					Installer.currentView = view;
+
+					let c = document.querySelector('.current-activity');
+
+					c.innerHTML = `
+						<div class="installer-head">
+							<h2>${title}</h2>
+							<p>${description}</p>
+						</div>
+						<div class="installer-body">
+							${content || "<p>Empty</p>"}
+						</div>
+					`;
+				}
+			}
+
+			setInterval( () => Installer.update() , 500 );
+
+			function Setup()
+			{
+				let root = process.cwd().split('\\').join('/');
+				try{
+					fs.writeFileSync(root + '/bin/mysql/bin/my.ini' , `[mysqld]
+datadir=${root}/bin/mysql/data/
+[client]`);
+					Installer.state.configuredServer = true;
+				}catch(e)
+				{
+					alert("Couldnt force fix to MySQL: " + e);
+				}
+
+			}
+			function SaveCreds()
+			{
+				let obj = {};
+
+				document.querySelectorAll("input[id*='master-']").forEach((inp) => {
+					obj[inp.id.split('master-').join('')] = inp.value;
+				});
+
+				try{
+					fs.writeFileSync(process.cwd() + '/tmp/crd.tmp' , JSON.stringify(obj));
+
+					Installer.state.configuredAdmin = true;
+				}catch(e)
+				{
+					alert(e);
+				}
+			}
+			function createJustInstalledLock()
+			{
+				fs.writeFileSync(process.cwd() + '/tmp/.fresh' , '');
+			}
+		</script>
+		<div class="app-window">
+			<div class="titlebar">
+				<p>DesktopAI setup</p>
+				<button class="git" onclick="openGithub();"><i class="fab fa-github"></i> View on GitHub</button>
+				<button class="reload" onclick="location.reload();">&reg;</button>
+				<button class="close" onclick="window.close();">x</button>
+			</div>
+			<div class="checklist">
+				<li task="download"><span class="status"><i class="fas fa-cancel"></i></span> Download Requirements</li>
+				<div class="vertical-line"></div>
+				<li task="config.server"><span class="status"><i class="fas fa-cancel"></i></span> Configure Server</li>
+				<div class="vertical-line"></div>
+				<li task="config.adminacc"><span class="status"><i class="fas fa-cancel"></i></span> Configure Admin</li>
+				<div class="vertical-line"></div>
+				<li task="license.agreement"><span class="status"><i class="fas fa-cancel"></i></span> License Agreement</li>
+
+				<button disabled>Finalize Setup</button>
+			</div>
+			<div class="current-activity">
+
+			</div>
+		</div>
+
+	</body>
+</html>

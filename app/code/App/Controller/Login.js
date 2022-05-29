@@ -1,6 +1,8 @@
 const ObjectPool = require('./../../ObjectPool');
 
 const Controller = ObjectPool.getModel('core/controller');
+const User = ObjectPool.getModel('security/user');
+const Session = ObjectPool.getModel('core/session');
 
 class Login extends Controller
 {
@@ -10,16 +12,24 @@ class Login extends Controller
 
 		let POST = this.getPostData('http');
 
-		if(POST['user[login]'] === 'dev.admin' && POST['user[password]'] === '')
+		if(this.getRequest().method == 'POST')
 		{
-			this.getSession().set('logged-in' , true);
-			this.getSession().set('user' , {
-				userId: 0 ,
-				username: 'dev.admin'
-			});
+			let username = POST['user[login]'];
+			let password = POST['user[password]'];
 
-			this.redirect('/');
+			let user = User.login(username , password)
+
+			if(user.logged_in)
+			{
+				let session = this.getSession();
+
+				session.set('logged-in' , true);
+				session.set('user-id' , user.user.getId());
+
+				this.redirect('/');
+			}
 		}
+
 
 		this.loadLayout();
 

@@ -266,7 +266,7 @@ const path = require('path');
 			}catch(e)
 			{
 				let inst = Pool.getController('error/page404');
-
+				// console.log(e);
 				let controller = new inst( req , res );
 				controller.execute( e + " - Action Called: " + info['action'] + 'Action');
 			}

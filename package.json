@@ -4,7 +4,9 @@
   "description": "A Desktop AI Application",
   "main": "launcher.js",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "electron": "^19.0.1",
+    "extract-zip": "^2.0.1",
     "ip": "^1.1.8",
     "mysql": "^2.18.1"
   },

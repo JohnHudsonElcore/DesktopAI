@@ -2,74 +2,157 @@ const ObjectPool = require('./../../ObjectPool');
 
 const Configuration = ObjectPool.getModel('core/configuration');
 
+const fs = require('fs');
+
+const { spawnSync , spawn } = require('child_process');
+
 class DbConnection
 {
 	/**
-	 * @description - this is a "bridge" to different database drivers/connections. This allows users to choose their desired data storage method
-	 * @param {String} @host     - The Host 
-	 * @param {String} @username - the username
-	 * @param {String} @password - the password
-	 * @param {String} @schema   - the database to use
-	 * @param {Number} @port     - the port of the database socket.
+	 * @singleton - This class is only instantiated once, the system can access it at any point.
+	 *  - this is completely unresticted, but addons will have to request the permission to the database first.
 	 */
-	constructor( { host , username , password , schema , port } )
+	constructor()
 	{
-		this.auth = {
-			host: host ?? "localhost" , 
-			username: username ?? "root" , 
-			password: password ?? "" , 
-			schema: schema ?? null , 
-			port: port ?? 3306
-		};
-		this.driver = 'mysql';
-		this.config = new Configuration();
+		this._changeMysqlIni(); //update my ini
+		this._startService(); //service closes when app does.
+		this.useDb = 'desktop_ai';
+		let out = spawnSync(ObjectPool.Root() + '/bin/mysql/bin/mysql.exe' ,  ['-uroot' , '-eCREATE DATABASE IF NOT EXISTS ' + this.useDb , '--raw']);
 
-		if(this.config.getConfig('data-storage'))
+		if(out.stderr)
 		{
-			this.driver = this.config.getConfig('data-storage');
+			console.error("CSTR: " + Buffer.from(out.stderr).toString('utf-8'));
 		}
-		this._connection = null;
+		if(out.stdout)
+		{
+			console.log("CSTR: " + Buffer.from(out.stdout).toString('utf-8'));
+		}
+	}
+	/**
+	 * @param {String} tableName - the name of the table to get the last insert id.
+	 * @return {Integer|NULL} 
+	 */
+	lastInsertId(tableName)
+	{
+		return this.query(`SELECT AUTO_INCREMENT
+							FROM  INFORMATION_SCHEMA.TABLES
+							WHERE TABLE_SCHEMA = '${this.useDb}'
+							AND   TABLE_NAME   = '${tableName}';`)[0].AUTO_INCREMENT;
 	}
 
 	/**
-	 * @description - Tries to connect to the database.
-	 * @return {Promise}
-	*/
-	connect()
+	 * @param {String} query to execute
+	 * @param {Object} binds - key: value
+	 * @return {Object} parsed response object.
+	 */
+	query(query , binds = {})
 	{
-		return new Promise( ( resolve , reject ) => {
 
-			switch(this.driver)
+		for(let val in binds)
+		{
+			if(typeof binds[val] === 'string' && binds[val] !== 'NULL')
 			{
-				//only mysql is supported for now
-				case "mysql":
-				default:
-					//load mysql adapter, assign that to _connection
-					//there will be calls made from this class that mirror to 
-					//the driver.
-
-					this._changeMysqlIni();
-
-					//todo: Implement this framework.
-				break;
+				query = query.split(':' + val).join(`'${binds[val]}'`);
+			}else{
+				query = query.split(':' + val).join(binds[val]);
 			}
+		}
+		// console.log("Query: " + query);
+		let a = null;
 
+		try{
+			a = spawnSync(ObjectPool.Root() + '/bin/mysql/bin/mysql.exe' ,  ['-uroot' , '-eUSE ' + this.useDb + ';' + query + '' , '--raw']);
+		}catch(e)
+		{
+			console.log("An Error Occured: " + e.toString());
+			return;
+		}
+		let res = Buffer.from(a.stdout);
+		let err = Buffer.from(a.stderr);
+
+		if(a.stderr && err.toString('utf-8') !== '')
+		{
+			
+			console.error("An Error Occured: stderr" + err.toString('utf-8'));
+			throw new Error(err.toString('utf-8') + ", Your Query was: " + query);
+			
+		}
+
+		let rows = [];
+		let headers = [];
+		res.toString('utf-8').replace("\r" , "\n").split("\n").forEach((row , idx) => {
+			if(idx == 0)
+			{
+				row.split(/(\s+)/im).forEach((col) => {
+					if(col.trim() == '')
+					{
+						return;
+					}
+					headers.push(col.trim());
+				});
+			}else{
+				if(row == '')
+				{
+					return;
+				}
+				
+				let append = {};
+				row.split("\t").forEach((col , a) => {
+
+					append[headers[a]] = col.split('\r').join('');
+
+				});
+
+				rows.push(append);
+			}
 		});
+		return rows;
 	}
 
-
-
-
-
-
-
-
-
-
-
-
 	//helper functions below
+	/**
+	 * @param {String} value to escape
+	 * @return {String} escaped.
+	 */
+	escape(value){ 
+		return value.replace(/\\/g, '\\\\').
+			         replace(/\u0008/g, '\\b').
+			         replace(/\t/g, '\\t').
+			         replace(/\n/g, '\\n').
+			         replace(/\f/g, '\\f').
+			         replace(/\r/g, '\\r').
+			         replace(/'/g, '\\\'').
+			         replace(/"/g, '\\"');
+	}
 
+	/**
+	 * this starts the service, this is called in launcher.js as this is a massive requirement.
+	 */
+	_startService()
+	{
+
+		let ls = spawn(ObjectPool.Root() + '/bin/mysql/bin/mysqld.exe' , ["-u root"]);
+
+		ls.stdout.on('data', (data) => {
+		  this.serviceContainer = true;
+		});
+
+		ls.stderr.on('data', (data) => {
+			let message = Buffer.from(data).toString('utf-8');
+
+			if(message.indexOf('starting as process') > -1)
+			{
+				this.serviceContainer = true;
+				return;
+			}
+			console.error("An error occured: " + Buffer.from(data).toString('utf-8'));
+		});
+
+		ls.on('close', (code) => {
+		  console.log("MySQL Exited");
+		});
+		
+	}
 
 	/**
 	 * @info - mysql needs installing to the "bin/mysql"
@@ -85,6 +168,7 @@ class DbConnection
 
 		if(!fs.existsSync(iniPath))
 		{
+			console.log("Cannot change INI");
 			//this should probably error, but see how the workflow goes yet.
 			return;
 		}else{
@@ -92,8 +176,9 @@ class DbConnection
 				fs.writeFileSync(iniPath , `[mysqld]\ndatadir=${iniPath}\n[client]\n`);
 			}catch(e)
 			{
-
+				console.log("Couldnt update myIni: " + e.toString());
 			}
 		}
 	}
 }
+module.exports = DbConnection;

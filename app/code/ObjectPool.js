@@ -33,7 +33,7 @@ class ObjectPool
 	 * @param {String} shortcode
 	 * @return {Singleton|Mixed} object
 	*/
-	static getSingleton(shortcode)
+	static getSingleton(shortcode , constructorObject = {})
 	{
 		if(global[ObjectPool.getSingletonKey(shortcode)])
 		{
@@ -42,13 +42,21 @@ class ObjectPool
 
 		let obj = ObjectPool._getObj(shortcode , 'Singleton');
 
-		let inst = new obj();
+		try{
+			let inst = new obj(constructorObject);
 
-		global[ObjectPool.getSingletonKey(shortcode)] = inst;
+			global[ObjectPool.getSingletonKey(shortcode)] = inst;
 
-		return global[ObjectPool.getSingletonKey(shortcode)];
+			return global[ObjectPool.getSingletonKey(shortcode)];
+		}catch(e)
+		{
+			console.error(shortcode + ' an error occured: ' + e);
+		}
 	}
-
+	static getInterface(shortcode)
+	{
+		return ObjectPool._getObj(shortcode , 'Interface');
+	}
 	/**
 	 * returns the root directory
 	*/

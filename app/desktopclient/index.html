@@ -1,0 +1,80 @@
+<html>
+	<head>
+		<title>Client | DesktopAI</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+		<link href="https://fonts.cdnfonts.com/css/sengoa" rel="stylesheet">
+		<style>
+			.app-window{
+				position: absolute;top: 0px;left: 0px;right: 0px;bottom: 0px;background: #01031f;
+				border-radius: 12px;
+				overflow: hidden;
+			}
+			.titlebar{
+				position: absolute;top: 0px;left: 0px;right: 0px;height: 49px;
+				line-height: 45px;color: #fff;
+				-webkit-app-region: drag;
+				border-bottom: 1px solid #ffffff25;
+			}
+			.titlebar p{
+				margin: 0px;
+				position: absolute;top: 0px;left: 0px;width: calc(100% - 45px);
+				height: 50px;
+				line-height: 50px;color: #fff;
+				font-family: 'Sengoa' , sans-serif;
+				font-size: 12px;
+				text-indent: 20px;
+				letter-spacing: 1.2px;
+			}
+			.titlebar button{
+				width: 45px;
+				height: 45px;
+				color: #eee;
+				border: 0px;
+				background: transparent;
+				cursor: pointer;
+				position: absolute;
+				top: 0px;
+				font-size: 19px;
+				z-index: 8000;
+				-webkit-app-region: no-drag;
+			}
+			.titlebar .reload{
+				right: 35px;
+				line-height: 48px;
+			}
+			.titlebar .close{
+				right: 0px;
+			}
+			.titlebar .git{
+				right: 90px;width: 120px;font-size: 12px;border: 1px solid #fff;
+				border-radius: 3px;
+				top: 12.5px;
+				height: 25px;
+			}
+			.titlebar .git:hover{
+				background: rgba(255 , 255 , 255 , 0.1);
+			}
+		</style>
+		<script>
+			function openGithub()
+			{
+				try{
+					require("electron").shell.openExternal("https://github.com/JohnHudsonElcore/DesktopAI/");
+				}catch(e)
+				{
+					alert(e);
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div class="app-window">
+			<div class="titlebar">
+				<p>DesktopAI</p>
+				<button onclick="openGithub()" class="git" onclick=""><i class="fab fa-github"></i> Github</button>
+				<button class="reload" onclick="minimizeWindow()"><i style="position: relative;top: -5px;" class="fas fa-window-minimize"></i></button>
+				<button class="close" onclick="minimizeWindow();"><i class="fas fa-xmark"></i></button>
+			</div>
+		</div>
+	</body>
+</html>

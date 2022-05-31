@@ -57,25 +57,22 @@
 			.content{
 				position: absolute;top: 50px;left: 0px;right: 0px;bottom: 0px;
 			}
-			.stt-widget{
-				position: absolute;top: 0px;left: 0px;right: 0px;height: 150px;background: #222222AB;
-			}
-			.current-word{
-				position: absolute;
-				top: 50px;left: 0px;width: 100%;
-				text-align: center;
-				color: #eee;
-				font-family: 'Sengoa',sans-serif;
-				margin: 0px;
-			}
-			.phonemes{
-				position: absolute;top: 80px;left: 0px;width: 100%;text-align: center;color: #fff;font-family: sans-serif;
-				font-size: 12px;
-			}
-			.voice-trainer{
-				position: absolute;
-				top: 0px;right: 230px;
+			p.error{
+				width: calc(100% - 20px);
+				height: 40px;
+				line-height: 40px;
+				background: #A11818;
 				color: #fff;
+				text-indent: 15px;
+				font-family: 'Sengoa' , sans-serif;
+				font-size: 11px;
+				margin: 10px;
+			}
+			.content h1{
+				color: #fff;
+				margin: 20px;
+				font-family: 'Sengoa',sans-serif;
+				font-size: 15px;
 			}
 		</style>
 		<script>
@@ -94,30 +91,26 @@
 			window.ObjectPool = require('./../code/ObjectPool');
 
 		</script>
-		<script>
-			const App = ObjectPool.getSingleton('core/app');
 
-
-		</script>
 	</head>
 	<body>
 		<div class="app-window">
 			<div class="titlebar">
 				<p onclick="location.reload();">DesktopAI</p>
-				<button class="voice-trainer" onclick="App.Launch('internal' , 'voice/trainer');" title="Voice Trainer"><i class="fas fa-microphone"></i></button>
 				<button onclick="openGithub()" class="git" onclick=""><i class="fab fa-github"></i> Github</button>
 				<button class="reload" onclick="minimizeWindow()"><i style="position: relative;top: -5px;" class="fas fa-window-minimize"></i></button>
 				<button class="close" onclick="minimizeWindow();"><i class="fas fa-xmark"></i></button>
 			</div>
 			<div class="content">
 
-				<div class="stt-widget">
-					<button onclick="location.reload();">reload</button>
-					<h1 class="current-word" id="speech-result">Loading voice recognition</h1>
-					<span class="phonemes">Please wait...</span>
-				</div>
+				
 
 			</div>
 		</div>
+		<script>
+			const App = ObjectPool.getSingleton('core/app');
+			App.init();
+			
+		</script>
 	</body>
 </html>

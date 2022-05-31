@@ -28,6 +28,33 @@ class DbConnection
 			console.log("CSTR: " + Buffer.from(out.stdout).toString('utf-8'));
 		}
 	}
+
+	insert(tableName , data){
+		let qb = `INSERT INTO ${tableName} ( `;
+
+		let i = 0;
+		for(let key in data)
+		{
+			if(i > 0) qb += ` , `;
+			qb += ` ${key} `;
+			i++;
+		}
+
+		qb += ` ) VALUES ( `;
+
+		i = 0;
+		for(let key in data)
+		{
+			if(i > 0) qb += ` , `;
+			qb += ` :${key} `;
+			i++;
+		}
+
+		qb += ` ) `;
+
+		return this.query(qb , data);
+	}
+
 	/**
 	 * @param {String} tableName - the name of the table to get the last insert id.
 	 * @return {Integer|NULL} 

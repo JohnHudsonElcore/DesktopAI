@@ -207,6 +207,14 @@
 				{
 					requirements.push(['mysql' , 'https://elcore.co.uk/desktopai/dependencies/mysql.zip']);
 				}
+				if(!fs.existsSync('../../bin/python'))
+				{
+					requirements.push(['python' , 'https://elcore.co.uk/desktopai/dependencies/python.zip']);
+				}
+				if(!fs.existsSync('../../bin/php'))
+				{
+					requirements.push(['php' , 'https://elcore.co.uk/desktopai/dependencies/php.zip']);
+				}
 
 				let out = `<table class="data">
 					<thead>

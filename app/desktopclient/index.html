@@ -68,6 +68,15 @@
 				font-family: 'Sengoa',sans-serif;
 				margin: 0px;
 			}
+			.phonemes{
+				position: absolute;top: 80px;left: 0px;width: 100%;text-align: center;color: #fff;font-family: sans-serif;
+				font-size: 12px;
+			}
+			.voice-trainer{
+				position: absolute;
+				top: 0px;right: 230px;
+				color: #fff;
+			}
 		</style>
 		<script>
 			function openGithub()
@@ -84,15 +93,18 @@
 			}
 			window.ObjectPool = require('./../code/ObjectPool');
 
-			window.Speech = ObjectPool.getSingleton('voice/recognition');
+		</script>
+		<script>
+			const App = ObjectPool.getSingleton('core/app');
 
-			
+
 		</script>
 	</head>
 	<body>
 		<div class="app-window">
 			<div class="titlebar">
 				<p onclick="location.reload();">DesktopAI</p>
+				<button class="voice-trainer" onclick="App.Launch('internal' , 'voice/trainer');" title="Voice Trainer"><i class="fas fa-microphone"></i></button>
 				<button onclick="openGithub()" class="git" onclick=""><i class="fab fa-github"></i> Github</button>
 				<button class="reload" onclick="minimizeWindow()"><i style="position: relative;top: -5px;" class="fas fa-window-minimize"></i></button>
 				<button class="close" onclick="minimizeWindow();"><i class="fas fa-xmark"></i></button>
@@ -101,7 +113,8 @@
 
 				<div class="stt-widget">
 					<button onclick="location.reload();">reload</button>
-					<h1 class="current-word">Say {{hotword}}</h1>
+					<h1 class="current-word" id="speech-result">Loading voice recognition</h1>
+					<span class="phonemes">Please wait...</span>
 				</div>
 
 			</div>

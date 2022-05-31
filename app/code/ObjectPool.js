@@ -1,4 +1,6 @@
 const { dirname } = require('path');
+const fs = require('fs');
+
 class ObjectPool
 {
 
@@ -97,6 +99,31 @@ class ObjectPool
 		let full = mod + '_singleton_' + objpath;
 
 		return full;
+	}
+	static loadContentView(path)
+	{
+		let app = ObjectPool.getSingleton('core/app');
+
+		if(!app.current)
+		{
+			return;
+		}
+
+		path = path.split('app://').join(app.current.dir + '/template/');
+
+		try{
+			this.setContentView(fs.readFileSync(path , 'utf-8'));
+		}catch(e){
+			this.setContentView(`<p class="error">Couldnt load template: ${path}</p>`);
+		}
+	}
+	static getPageObject(qs)
+	{
+		return document.querySelector(".app-window .content").querySelector(qs);
+	}
+	static setContentView(str)
+	{
+		document.querySelector(".app-window .content").innerHTML = str;
 	}
 
 	/**

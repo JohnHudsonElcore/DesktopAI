@@ -1,0 +1,23 @@
+{
+	"module": {
+		"vendor": "John Hudson@ELCore" , 
+		"version": "1.0.0" , 
+		"permissions": [
+			
+		]
+	} , 
+	"meta": {
+		"name": "DesktopAI Dashboard" , 
+		"icon": null , 
+		"description": "Main Dashboard App for DesktopAI"
+	} , 
+	"events": {
+		"system-load": [
+			"events/launch-dash"
+		]
+	} , 
+	"drawer": {
+		"visible": false
+	} , 
+	"launch": "scripts/launch"
+}

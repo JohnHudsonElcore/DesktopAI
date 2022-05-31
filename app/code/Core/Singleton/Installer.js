@@ -18,6 +18,10 @@ class Installer
 			//download, extract and install.
 			return true;
 		}
+		if(!fs.existsSync(ObjectPool.Root() + '/bin/python'))
+		{
+			return true;
+		}
 
 		return false;
 	}

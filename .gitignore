@@ -16,5 +16,7 @@ npm-debug.log
 var/session
 var/config
 bin/mysql
-bin/julius
+bin/python
+bin/php
+bin/python.zip
 tmp

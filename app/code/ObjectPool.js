@@ -71,6 +71,13 @@ class ObjectPool
 		}
 	}
 	/**
+	 * 
+	 */
+	static getComponent(shortcode)
+	{
+		return ObjectPool._getObj(shortcode , 'Component');
+	}
+	/**
 	 * @description - This should not be used by anyone, this is primarily a "private" method. 
 	 * @param {String} shortcode - Example: core/controller -> app/code/Core/${type}/Controller
 	 * @param {String} type - Defaults to Model, basically what folder to search for the class.
@@ -100,7 +107,7 @@ class ObjectPool
 
 		return full;
 	}
-	static loadContentView(path)
+	static loadContentView(path , binds = {})
 	{
 		let app = ObjectPool.getSingleton('core/app');
 
@@ -112,7 +119,7 @@ class ObjectPool
 		path = path.split('app://').join(app.current.dir + '/template/');
 
 		try{
-			this.setContentView(fs.readFileSync(path , 'utf-8'));
+			this.setContentView(fs.readFileSync(path , 'utf-8') , binds);
 		}catch(e){
 			this.setContentView(`<p class="error">Couldnt load template: ${path}</p>`);
 		}
@@ -121,11 +128,33 @@ class ObjectPool
 	{
 		return document.querySelector(".app-window .content").querySelector(qs);
 	}
-	static setContentView(str)
+	static setContentView(str , binds = {})
 	{
-		document.querySelector(".app-window .content").innerHTML = str;
-	}
+		document.querySelector(".app-window .content").innerHTML = ObjectPool.bind(str , binds);
 
+		document.querySelectorAll(".app-window .content script").forEach((scr) => {
+			if(scr.hasAttribute("src"))
+			{
+
+			}else{
+				try{
+					eval(scr.textContent);
+				}catch(r)
+				{
+					console.error(r , scr.textContent);
+				}
+			}
+		});
+	}
+	static bind(str , values = {})
+	{
+		for(let prop in values)
+		{
+			str = str.split('{{ ' + prop + ' }}').join(values[prop]);
+		}
+
+		return str;
+	}
 	/**
 	* @param {String} str - The string to capitalize.
 	* @return {String}

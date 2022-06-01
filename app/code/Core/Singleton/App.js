@@ -18,9 +18,29 @@ class App
 		}
 		//load apps and register events.
 
-		let apps = fs.readdirSync(ObjectPool.Root() + '/apps/core');
+		this.loadApps('core');
+		this.loadApps('ext');
+		this.inited = true;
+		console.log('Emitting ready');
+		this.emit('system-load' , {
 
-		const base = ObjectPool.Root() + '/apps/core/';
+		})
+	}
+	getUser()
+	{
+		if(!this.currentUser)
+		{
+			let User = ObjectPool.getModel('security/user');
+			this.currentUser = new User();
+			this.currentUser.load(1);		
+		}
+		return this.currentUser;
+	}
+	loadApps(codepool)
+	{
+		let apps = fs.readdirSync(ObjectPool.Root() + '/apps/' + codepool);
+
+		const base = ObjectPool.Root() + '/apps/' + codepool + '/';
 		apps.forEach( (app) => {
 			const _app = base + '/' + app + '/';
 			let manifest = require(_app + '/manifest');
@@ -30,7 +50,7 @@ class App
 			{
 				manifest.events[evName].forEach( ( scriptToCall ) => {
 					this.on(evName , () => {
-						let path = ObjectPool.Root() + '/apps/core/' + app + '/' + scriptToCall;
+						let path = ObjectPool.Root() + '/apps/' + codepool + '/' + app + '/' + scriptToCall;
 
 						if(fs.existsSync(path + '.js'))
 						{
@@ -43,11 +63,6 @@ class App
 				} );					
 			}
 		});
-		this.inited = true;
-		console.log('Emitting ready');
-		this.emit('system-load' , {
-
-		})
 	}
 	runScript(path)
 	{
@@ -104,12 +119,20 @@ class App
 				resource: ObjectPool , 
 				app: this
 			});
-
+			if(this.current)
+			{
+				this.current.onDestroy();
+			}
 			if(app.onCreate){
 				this.current = app;
 				app.dir = baseDir;
 
-				app.onCreate();
+				try{
+					app.onCreate();
+				}catch(e)
+				{
+					console.error(e);
+				}
 			}else{
 				alert('Couldn\'t launch app ' + appName + ' no onCreate method');
 			}

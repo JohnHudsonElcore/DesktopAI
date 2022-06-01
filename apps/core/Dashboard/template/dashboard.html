@@ -1,4 +1,188 @@
-<h1>Welcome back</h1>
+<h1 class="welcome-message">Welcome back, <font style="font-size:22px;text-transform: uppercase;">{{ users_name }}</font></h1>
 <div class="widget-container">
 
+	<div class="date-widget">
+		<span class="dayname">{{ date_day }}</span>
+		<span class="date">{{ date }}</span>
+		<br>
+		<span class="time">{{ time }}</span>
+
+		<style>
+			.date-widget{
+				width: 40%;
+				display: inline-block;
+				vertical-align: top;
+				height: 140px;
+				position: relative;
+				margin-left: 50px;
+				background: rgba(0, 0, 0, 0.1);
+				border-radius: 12px;
+			}
+			.date-widget .dayname{
+				position: absolute;
+				top: 30px;left: 30px;
+				color: #fff;
+				text-transform: uppercase;
+				font-family: 'Sengoa',sans-serif;
+				font-size: 20px;
+				letter-spacing: 10px;
+			}
+			.date-widget .date{
+				position: absolute;
+				top: 30px;right: 30px;
+				text-transform: uppercase;
+				font-family: 'Sengoa',sans-serif;
+				font-size: 20px;
+				letter-spacing: 10px;
+				color: #ccc;
+			}
+			.date-widget .time{
+				position: absolute;top: 70px;left: 30px;width: 100%;text-align: left;
+				font-size: 45px;
+				font-family: 'Sengoa',sans-serif;
+				color: #fff;
+				letter-spacing: 20px;
+			}
+			.weather{
+				width: 48%;
+				padding-top: 10px;
+				display: inline-block;
+				vertical-align: top;
+				height: 130px;
+				position: relative;
+				margin-left: 50px;
+				background: rgba(0, 0, 0, 0.1);
+				border-radius: 12px;
+			}
+		</style>
+	</div>
+	<div class="weather">
+		<a class="weatherwidget-io" href="https://forecast7.com/en/53d43n1d36/rotherham/" data-label_1="ROTHERHAM" data-label_2="WEATHER" data-font="Play" data-days="3" data-theme="pure" data-basecolor="transparent" data-accent="transparent" data-textcolor="#fff" data-mooncolor="#fff" data-cloudcolor="#fff" >ROTHERHAM WEATHER</a>
+		<script>
+		!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+		</script>
+	</div>
 </div>
+
+<div class="sidebar-activities">
+	<div class="controller">
+		<button><i class="fas fa-angles-left"></i></button>
+		<div id="current-tab-name">Notifications</div>
+		<button><i class="fas fa-angles-right"></i></button>
+	</div>
+	<div class="panes">
+
+	</div>
+</div>
+<style>
+	.sidebar-activities{
+		position: absolute;top: 30px;right: 30px;width: 30%;bottom: 30px;border-radius: 12px;
+		background: #fff;
+	}
+	.welcome-message{
+		height: 120px;
+		line-height: 120px;
+		text-indent: 60px;
+	}
+	.widget-container{
+		width: calc(70% - 90px);
+		margin: 30px;
+		margin-top: -30px;
+		height: calc(100% - 160px);
+		border-radius: 12px;
+	}
+	.controller{
+		width: calc(100% - 40px);
+		margin: 20px;
+	}
+	.controller button{
+		width: 60px;
+		height: 60px;
+		background: transparent;
+		font-size: 20px;
+		color: #000;
+		border: 0px;
+		cursor: pointer;
+	}
+	.controller button:hover{
+		background: rgba(0 , 0 , 0 , 0.1);
+		border-radius: 12px;
+	}
+	.controller > div{
+		display: inline-block;
+		width: calc(100% - 130px);
+		height: 60px;
+		line-height: 60px;
+		text-align: center;
+		font-family: 'Sengoa',sans-serif;
+		font-weight: bold;
+	}
+</style>
+<script>
+	window.SidebarWidget = {
+		CurrentTab: 0 , 
+		Tabs: [
+			{
+				label: 'Notifications' , 
+				domElement: null , //for now.
+			} , 
+			{
+				label: 'E-Mail' , 
+				domElement: null , 
+			} , 
+			{
+				label: 'Social' , 
+				domElement: null
+			} , 
+			{
+				label: 'Calendar' , 
+				domElement: null
+			}
+		] , 
+		showTab: (index) => {
+			let tab = SidebarWidget.Tabs[index];
+
+			document.querySelector(".controller #current-tab-name").textContent = tab.label;
+
+			let container = document.querySelector(".sidebar-activities .panes");
+
+			container.innerHTML = '';
+
+			if(tab.domElement && this.domElement.tagName)
+			{
+				container.appendChild(tab.domElement);
+			}else{
+				container.innerHTML = `<p class="error">No DOMElement for tab</p>`;
+			}
+		} , 
+		next: () => {
+			if(SidebarWidget.CurrentTab === SidebarWidget.Tabs.length - 1)
+			{
+				SidebarWidget.CurrentTab = 0;
+			}else{
+				SidebarWidget.CurrentTab++;
+			}
+			SidebarWidget.showTab(SidebarWidget.CurrentTab);
+		} , 
+		previous: () => {
+			if(SidebarWidget.CurrentTab === 0)
+			{
+				SidebarWidget.CurrentTab = SidebarWidget.Tabs.length - 1;
+			}else{
+				SidebarWidget.CurrentTab--;
+			}
+			SidebarWidget.showTab(SidebarWidget.CurrentTab);
+		} , 
+		Init: () => {
+			document.querySelector(".controller button").onclick = () => {
+				SidebarWidget.next();
+			};
+			document.querySelector(".controller > button:nth-last-child(1)").onclick = () => {
+				SidebarWidget.previous();
+			};
+			SidebarWidget.showTab(0);
+		}
+	}
+
+	SidebarWidget.Init();
+</script>

@@ -22,8 +22,8 @@ class AppWindow
 				nodeIntegration: true , 
 				contextIsolation: false
 			} , 
-			width: width - 40 , 
-			height: height - 40 , 
+			width: width , 
+			height: height , 
 			frame: false , 
 			transparent: true , 
 			icon: ObjectPool.Root() + '/app/media/app_drawer.png'

@@ -48,19 +48,17 @@
 				padding-top: 10px;
 				display: inline-block;
 				vertical-align: top;
-				height: 130px;
+				height: 400px;
 				position: relative;
 				margin-left: 50px;
 				background: rgba(0, 0, 0, 0.1);
 				border-radius: 12px;
+				overflow: hidden;
 			}
 		</style>
 	</div>
 	<div class="weather">
-		<a class="weatherwidget-io" href="https://forecast7.com/en/53d43n1d36/rotherham/" data-label_1="ROTHERHAM" data-label_2="WEATHER" data-font="Play" data-days="3" data-theme="pure" data-basecolor="transparent" data-accent="transparent" data-textcolor="#fff" data-mooncolor="#fff" data-cloudcolor="#fff" >ROTHERHAM WEATHER</a>
-		<script>
-		!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-		</script>
+		<iframe width="100%" height="100%" src="https://embed.windy.com/embed2.html?lat=51.764&lon=-0.224&detailLat=51.764&detailLon=-0.224&width=650&height=450&zoom=5&level=surface&overlay=wind&product=ecmwf&menu=&message=&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=default&metricTemp=default&radarRange=-1" frameborder="0"></iframe>
 	</div>
 </div>
 
@@ -78,6 +76,8 @@
 	.sidebar-activities{
 		position: absolute;top: 30px;right: 30px;width: 30%;bottom: 30px;border-radius: 12px;
 		background: #fff;
+	}
+	.weather{
 	}
 	.welcome-message{
 		height: 120px;

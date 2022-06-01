@@ -1,0 +1,21 @@
+{
+	"module": {
+		"vendor": "John Hudson@ELCore" , 
+		"version": "1.0.0" , 
+		"permissions": [
+			
+		]
+	} , 
+	"meta": {
+		"name": "Settings" , 
+		"icon": "app.png" , 
+		"description": "Change your settings to suit your personal preferences"
+	} , 
+	"events": {
+		
+	} , 
+	"drawer": {
+		"visible": true
+	} , 
+	"launch": "scripts/launch"
+}

@@ -98,6 +98,14 @@ class App
 		this.events[eventName].push(call);
 	}
 	Launch( codepool = 'core' , appName ) {
+
+		try{
+			ApplicationLauncher.Hide();
+		}catch(e)
+		{
+			//not found, dont worry
+		}
+
 		let baseDir = ObjectPool.Root() + '/apps/' + codepool + '/' + appName + '/';
 
 		try{
@@ -119,7 +127,7 @@ class App
 				resource: ObjectPool , 
 				app: this
 			});
-			if(this.current)
+			if(this.current && this.current.onDestroy)
 			{
 				this.current.onDestroy();
 			}

@@ -115,7 +115,10 @@ class ObjectPool
 		{
 			return;
 		}
-
+		if(!binds)
+		{
+			binds = {};
+		}
 		path = path.split('app://').join(app.current.dir + '/template/');
 
 		try{
@@ -133,6 +136,7 @@ class ObjectPool
 		document.querySelector(".app-window .content").innerHTML = ObjectPool.bind(str , binds);
 
 		document.querySelectorAll(".app-window .content script").forEach((scr) => {
+			
 			if(scr.hasAttribute("src"))
 			{
 

@@ -3,12 +3,9 @@
 		<title>Client | DesktopAI</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 		<link href="https://fonts.cdnfonts.com/css/sengoa" rel="stylesheet">
-		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 		<style>
 			.app-window{
 				position: absolute;top: 0px;left: 0px;right: 0px;bottom: 0px;background: #262a41;
-				border-radius: 12px;
 				overflow: hidden;
 			}
 			.titlebar{
@@ -76,6 +73,58 @@
 				font-family: 'Sengoa',sans-serif;
 				font-size: 20px;
 			}
+			button.dash{
+				position: absolute;top: 0px;left: 110px;height: 50px;;
+			}
+			button.app-drawer{
+				position: absolute;top: 0px;left: 160px;height: 50px;
+				border-left: 1px solid #ffffff15;
+				border-right: 1px solid #ffffff15;
+			}
+			.is-loading img{
+				position: absolute;
+				top: calc(50% - 20px);
+				left: calc(50% - 20px);
+				width: 40px;
+				height: 40px;
+			}
+			.no-results p{
+				position: absolute;
+				top: calc(50% - 15px);
+				left: calc(50% - 100px);
+				color: #fff;
+				font-size: 12px;
+				font-family: sans-serif;
+				margin: 0px;
+				line-height: 30px;
+			}
+			.show-results .grid{
+				list-style-type: none;
+				padding: 0px;
+				margin: 0px;
+			}
+			.grid li{
+				display: inline-grid;
+				width: 100px;height: 130px;
+				margin: 10px;
+				position: relative;
+				cursor: pointer;
+				border-radius: 12px;
+			}
+			.grid li:hover{
+				border: 1px solid #000;
+				background: rgba(0 , 0 , 0 , 0.2);
+			}
+			.grid li img{
+				position: absolute;top: 10px;left: 10px;width: calc(100% - 20px);
+			}
+			.grid li span{
+				position: absolute;bottom: 10px;left: 10px;width: calc(100% - 20px);
+				text-align: center;
+				color: #fff;
+				font-family: 'Sengoa',sans-serif;
+				font-size: 13px;
+			}
 		</style>
 		<script>
 			function openGithub()
@@ -92,6 +141,100 @@
 			}
 			window.ObjectPool = require('./../code/ObjectPool');
 
+			window.ApplicationLauncher = {
+				Show: () => {
+					if(!ApplicationLauncher.domElement)
+					{
+						ApplicationLauncher.domElement = document.createElement('div');
+						ApplicationLauncher.domElement
+										   .setAttribute(
+										   		"style" , 
+										   		"position:fixed;top:50px;left:0px;right:0px;height:0px;overflow:hidden;transition: height 0.2s linear;background:#222;"
+											);
+						document.querySelector('.app-window').appendChild(ApplicationLauncher.domElement);
+					}
+					ApplicationLauncher.domElement.style.height = 'calc(100% - 50px)';
+				} , 
+				Hide: () => {
+					if(!ApplicationLauncher.domElement)
+					{
+						ApplicationLauncher.domElement = document.createElement('div');
+						ApplicationLauncher.domElement
+										   .setAttribute(
+										   		"style" , 
+										   		"position:fixed;top:50px;left:0px;right:0px;height:0px;overflow:hidden;transition: height 0.2s linear;background:#222;"
+											);
+						document.querySelector('.app-window').appendChild(ApplicationLauncher.domElement);
+					}
+					ApplicationLauncher.domElement.style.height = '0px';
+				} , 
+				Toggle: () => {
+					if(!ApplicationLauncher.appCollection)
+					{
+						let coll = ObjectPool.getModel('app/collection');
+						ApplicationLauncher.appCollection = new coll();
+					}
+					if(!ApplicationLauncher.domElement)
+					{
+						ApplicationLauncher.domElement = document.createElement('div');
+						ApplicationLauncher.domElement
+										   .setAttribute(
+										   		"style" , 
+										   		"position:fixed;top:50px;left:0px;right:0px;height:0px;overflow:hidden;transition: height 0.2s linear;background:#222;"
+											);
+						document.querySelector('.app-window').appendChild(ApplicationLauncher.domElement);
+					}
+					if(
+						ApplicationLauncher.domElement.style.height !== '0px'
+					){
+						console.log('Height: ' + ApplicationLauncher.domElement.style.height);
+						ApplicationLauncher.Hide();
+					}else{
+
+						ApplicationLauncher.Show();
+						ApplicationLauncher.domElement.className = 'is-loading';
+						ApplicationLauncher.domElement.innerHTML = `<img src="${ObjectPool.Root()}/app/media/loading.gif"/>`;
+
+						ApplicationLauncher.appCollection
+										   .getVisibleApplications()
+										   .then( ( apps ) => {
+
+										   		if(apps.length < 1)
+										   		{
+										   			ApplicationLauncher.domElement.className = 'no-results';
+										   			ApplicationLauncher.domElement.innerHTML = `<p>No Applications found</p>`;
+										   			return;
+										   		}
+
+										   		ApplicationLauncher.domElement.className = 'show-results';
+										   		ApplicationLauncher.domElement.innerHTML = `<div class="grid">
+
+										   		</div>`;
+
+										   		apps.forEach((app) => {
+										   			let li = document.createElement("li");
+
+										   			li.onclick = () => {
+										   				switch(app.appType)
+										   				{
+										   					case 'core':
+										   						App.Launch('core' , app.app);
+										   					break;
+										   					case 'userapp':
+										   						App.Launch('ext' , app.app);
+										   					break;
+										   				}
+										   			}
+
+										   			li.innerHTML = `<img src="${app.basePath}/${app.meta.icon}"/><span>${app.meta.name}</span>`;
+
+										   			ApplicationLauncher.domElement.querySelector('.grid').appendChild(li);
+										   		})
+
+										   });
+					}
+				}
+			}
 		</script>
 
 	</head>
@@ -99,6 +242,8 @@
 		<div class="app-window">
 			<div class="titlebar">
 				<p onclick="location.reload();">DesktopAI</p>
+				<button class="dash" title="Dashboard" onclick="App.Launch('core' , 'Dashboard');"><i class="fas fa-home"></i></button>
+				<button title="Show Applications" onclick="ApplicationLauncher.Toggle();" class="app-drawer"><i class="fa-solid fa-rocket"></i></button>
 				<button onclick="openGithub()" class="git" onclick=""><i class="fab fa-github"></i> Github</button>
 				<button class="reload" onclick="minimizeWindow()"><i style="position: relative;top: -5px;" class="fas fa-window-minimize"></i></button>
 				<button class="close" onclick="minimizeWindow();"><i class="fas fa-xmark"></i></button>

@@ -1,4 +1,8 @@
 { "Component": "View" , "id": "my-app" , "css": "position:absolute;top:0px;left:0px;right:0px;bottom:0px;" , "attributes": {} , "children": [
-		{"Component":"View" , "id": "headbar" , "css": "position:absolute;top:0px;left:0px;right:0px;height:70px;background:#222;" , "attributes": {}}
+		{"Component":"View" , "id": "headbar" , "css": "position:absolute;top:0px;left:0px;right:0px;height:70px;background:#222;" , "attributes": {} , "children": [
+			{"Component":"Image" , "id": "software-icon" , "css": "position:absolute;top:15px;left:15px;height:40px;width:40px;" , "attributes": {
+				"src": "../../apps/ext/TestPYApp/icon.png"
+			}}
+		]}
 	]
 }

@@ -8,7 +8,10 @@ class ModTool
 		
 		this.pyCode = pyCode;
 	}
-
+	/**
+	 * @param {String} type - "import" etc..
+	 * @param {String} pkg - "os,json,View" etc..
+	 */
 	addDependency({	type , pkg })
 	{
 		if(this.pyCode.indexOf(type + " " + pkg) > -1)
@@ -18,6 +21,10 @@ class ModTool
 			this.pyCode = type + " " + pkg + "\n" + this.pyCode;
 		}
 	}
+
+	/**
+	 * @param {String|Python} python code string to execute before the script.
+	 */
 	injectAtTop(pyCode)
 	{
 		if(this.pyCode.indexOf(pyCode) > -1)

@@ -17,6 +17,9 @@ class PythonUIApp
 		return this.ui;
 	}
 
+	/**
+	 * @param {String|JSON Format} str - JSON string from Console.
+	 */
 	listenForUI(str)
 	{
 		try{
@@ -79,6 +82,9 @@ class PythonUIApp
 			this.rebuildUI(child , node);
 		});
 	}
+	/**
+	 * on app close
+	 */
 	onDestroy()
 	{
 		this.getDomElement().parentNode.removeChild(this.getDomElement());

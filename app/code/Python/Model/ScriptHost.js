@@ -15,14 +15,23 @@ class Python_ScriptHost
 		this.callbacks = [];
 		this.errorCatch = [];
 	}
+	/**
+	 * @param {Function|Callable} call - the function to call when a message is received.
+	 */
 	onMessage(call)
 	{
 		this.callbacks.push(call);
 	}
+	/**
+	 * @param {Function|Callable} call - the function to call when a error is received.
+	 */
 	onError(call)
 	{
 		this.errorCatch.push(call);
 	}
+	/**
+	 * @param {String} argument - add an argument to python on execution
+	 */
 	addArgument(argument)
 	{
 		this.commandLine.arguments.push(argument);
@@ -34,7 +43,6 @@ class Python_ScriptHost
 			this.commandLine.PythonDir , 
 			this.commandLine.arguments
 		);
-		console.log('Executing Python');
 		this.container.stdout.on('data' , (data) => {
 			data = Buffer.from(data).toString('utf-8');
 
@@ -46,6 +54,9 @@ class Python_ScriptHost
 			this.errorCatch.forEach((call) => call(data));
 		});
 	}
+	/**
+	 * @role - kill off python container.
+	 */
 	stop()
 	{
 		this.container.kill();

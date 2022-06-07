@@ -14,6 +14,10 @@ class App
 {
 	static DESKTOP_AI_ROOT = ObjectPool.Root();
 
+	/**
+	 * @param {String} params.script - the path to the script
+	 * @param {String} params.workingDir - the directory to execute the script from.
+	 */
 	constructor(params = {})
 	{
 		if(!params.script)
@@ -28,6 +32,10 @@ class App
 
 		this.messageCallbacks = [];
 	}
+	/**
+	 * @role - Add in core dependencies if they're not in, and allow the execution directory to be changed to 
+	 *       - the root of DesktopAI
+	 */
 	injectDependencies()
 	{
 		//this will modify the entry file, 
@@ -65,12 +73,18 @@ class App
 		}
 
 	}
+	/**
+	 * @return {Array} list of directories containing python modules.
+	 */
 	coreLibraries()
 	{
 		//this will build a single dimensional array of directories containing .py files.
 
 		return this.scandir(ObjectPool.Root() + '/app/python/');
 	}
+	/**
+	 * @return {Array} list of directories contain python modules.
+	 */
 	scandir(path)
 	{
 		let out = [];
@@ -115,10 +129,16 @@ class App
 			execution.execute();
 		}
 	}
+	/**
+	 * @role - Kill of Python process, prevent memory leaks, and tidying up of system resources
+	 */
 	destroy()
 	{
 		this.execution.stop();
 	}
+	/**
+	 * @param {Function|Callable} call - add a listener for console response.
+	 */
 	onMessageRecieved(call)
 	{
 		this.messageCallbacks.push(call);

@@ -1,0 +1,21 @@
+{
+	"module": {
+		"vendor": "John Hudson@ELCore" , 
+		"version": "1.0.0" , 
+		"permissions": [
+			
+		]
+	} , 
+	"meta": {
+		"name": "TestPYApp" , 
+		"icon": "../../core/Settings/app.png" , 
+		"description": "TestPYApp"
+	} , 
+	"events": {
+		
+	} , 
+	"drawer": {
+		"visible": true
+	} , 
+	"launch": "scripts/launch"
+}

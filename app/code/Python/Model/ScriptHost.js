@@ -48,7 +48,7 @@ class Python_ScriptHost
 	}
 	stop()
 	{
-		this.container.close();
+		this.container.kill();
 	}
 }
 

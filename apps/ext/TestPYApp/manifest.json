@@ -8,7 +8,7 @@
 	} , 
 	"meta": {
 		"name": "TestPYApp" , 
-		"icon": "../../core/Settings/app.png" , 
+		"icon": "icon.png" , 
 		"description": "TestPYApp"
 	} , 
 	"events": {

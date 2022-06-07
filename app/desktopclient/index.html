@@ -198,7 +198,7 @@
 						ApplicationLauncher.appCollection
 										   .getVisibleApplications()
 										   .then( ( apps ) => {
-
+										   		console.log(apps);
 										   		if(apps.length < 1)
 										   		{
 										   			ApplicationLauncher.domElement.className = 'no-results';
@@ -231,7 +231,7 @@
 										   			ApplicationLauncher.domElement.querySelector('.grid').appendChild(li);
 										   		})
 
-										   });
+										   }).catch((err) => console.error(err));
 					}
 				}
 			}

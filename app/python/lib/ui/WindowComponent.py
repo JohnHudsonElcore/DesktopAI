@@ -27,7 +27,10 @@ class Window(View.View):
 			parent = self
 		component = None;
 		if "Component" in obj:
-			component = self.getComponent("View." + obj['Component'])
+			if "." in obj['Component']:
+				component = self.getComponent(obj['Component'])
+			else:
+				component = self.getComponent("View." + obj['Component'])
 		else:
 			component = View.View()
 

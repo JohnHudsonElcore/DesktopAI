@@ -1,7 +1,7 @@
 const ObjectPool = require('./../../ObjectPool');
 const fs = require('fs');
 const ModTool = ObjectPool.getModel('python/modTool');
-
+const {dirname} = require('path');
 
 /**
  * This is for Python Apps, this creates
@@ -61,6 +61,8 @@ class App
 			this.coreLibraries().forEach((libDir) => {
 				mod.injectAtTop('sys.path.append("' + libDir.split('\\').join('/') + '")');
 			});
+
+			mod.injectAtTop('sys.path.append("' + dirname(ObjectPool.Root() + '/apps/ext/' + this.config.script).split('\\').join('/') + '")');
 
 			let script = mod.rewrite();
 			fs.writeFileSync(ObjectPool.Root() + '/apps/ext/' + this.config.script , script);
@@ -122,12 +124,18 @@ class App
 			this.execution = execution;
 			execution.onMessage((message) => {
 				this.messageCallbacks.forEach((call) => call(message));
+				console.log(message);
 			});
 			execution.onError((e) => {
 				console.error(e);
 			})
 			execution.execute();
 		}
+	}
+	sendToPython(message)
+	{
+		console.log("Sending to python: " + message);
+		this.execution.sendMessage(message);
 	}
 	/**
 	 * @role - Kill of Python process, prevent memory leaks, and tidying up of system resources

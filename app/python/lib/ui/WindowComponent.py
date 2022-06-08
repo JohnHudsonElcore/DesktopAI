@@ -1,21 +1,41 @@
 import View
 import json
+import os
 
 class Window(View.View):
 	def __init__(self):
 		super().__init__()
 		self.isRoot = True
 		self.addCss('top' , '0px').addCss('left' , '0px').addCss('right' , '0px').addCss('bottom' , '0px')
-
-	def listen(self):
+		
+	async def listen(self):
 		print(self.toJSON())
-		update = input('')
-		self.handle(update)
+		try:
+			
+			update = input('')
+			while update != '':
+				self.handle(update)
+			self.listen()
 
+		except EOFError as e:
+			print('{ "message-type": "error" , "error": "' + str(e) + '" }')
+			self.listen()
+			return self
 	def handle(self , jsonstr):
+		# print("\nEVENT:\n" + jsonstr + "\n======================\n")
 		data = json.loads(jsonstr)
 
-		self.listen()
+		if "message-type" in data:
+			if data['message-type'] == "event":
+				
+				id = data['component-id']
+
+				target = self.findViewById(id)
+
+				if target != None:
+					target.emit(data['event-name'] , data['event'])
+			else:
+				print('{"error": "Not a Event" }')
 
 	def fromJSON(self , path):
 		with open(path , 'r') as file:

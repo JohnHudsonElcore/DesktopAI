@@ -36,13 +36,23 @@ class Python_ScriptHost
 	{
 		this.commandLine.arguments.push(argument);
 	}
+	sendMessage(message)
+	{
+		this.container.stdin.setEncoding('UTF-8')
+		this.container.stdin.cork();
+		this.container.stdin.write(message + "\n");
+		this.container.stdin.uncork();
 
+	}
 	execute()
 	{
 		this.container = spawn(
 			this.commandLine.PythonDir , 
 			this.commandLine.arguments
 		);
+		this.container.stdin.on('data' , (data) => {
+			console.log(data);
+		})
 		this.container.stdout.on('data' , (data) => {
 			data = Buffer.from(data).toString('utf-8');
 

@@ -97,6 +97,31 @@ class App
 		}
 		this.events[eventName].push(call);
 	}
+
+	LaunchService( { type , app , service } )
+	{
+		let serviceKey = (type + "_" + app.meta.name + "_" + service).split("/").join("").toLowerCase();
+		if(!this.services)
+		{
+			this.services = {};
+		}
+		if(this.services[serviceKey])
+		{
+			console.log("Service already running: " , app , service);
+			return;
+		}
+		let scrpath = app.basePath + '/' + service;
+
+		const serv = require(scrpath);
+
+		let inst = new serv({
+				resource: ObjectPool , 
+				app: this
+			});
+
+		this.services[serviceKey] = inst;
+	}
+
 	Launch( codepool = 'core' , appName ) {
 
 		try{

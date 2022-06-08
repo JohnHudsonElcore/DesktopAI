@@ -16,7 +16,7 @@
 			}
 			.titlebar p{
 				margin: 0px;
-				position: absolute;top: 0px;left: 0px;width: calc(100% - 45px);
+				position: absolute;top: 0px;left: 0px;width: fit-content;
 				height: 50px;
 				line-height: 50px;color: #fff;
 				font-family: 'Sengoa' , sans-serif;
@@ -235,6 +235,7 @@
 					}
 				}
 			}
+
 		</script>
 
 	</head>
@@ -257,7 +258,30 @@
 		<script>
 			const App = ObjectPool.getSingleton('core/app');
 			App.init();
+
+			if(!ApplicationLauncher.appCollection)
+			{
+				let coll = ObjectPool.getModel('app/collection');
+				ApplicationLauncher.appCollection = new coll();
+			}
 			
+			ApplicationLauncher.appCollection
+							   .getAllApplications()
+							   .then(
+							   		(apps) => {
+							   			apps.forEach((app) => {
+							   				if (app.services) {
+							   					app.services.forEach((service) => {
+							   						App.LaunchService({
+							   							type: (app.appType == 'core' ? 'core' : 'ext') , 
+							   							app: app , 
+							   							service: service
+							   						})
+							   					});
+							   				}
+							   			})
+							   		}
+							   	);
 		</script>
 	</body>
 </html>

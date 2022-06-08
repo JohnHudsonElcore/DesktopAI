@@ -1,0 +1,21 @@
+{
+	"module": {
+		"vendor": "John Hudson@ELCore" , 
+		"version": "1.0.0" , 
+		"permissions": [
+			
+		]
+	} , 
+	"meta": {
+		"name": "Test PHP App" , 
+		"icon": "icon.png" , 
+		"description": "Test PHP App"
+	} , 
+	"events": {
+		
+	} , 
+	"drawer": {
+		"visible": true
+	} , 
+	"launch": "scripts/launch"
+}

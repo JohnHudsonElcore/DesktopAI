@@ -1,0 +1,21 @@
+{
+	"module": {
+		"vendor": "John Hudson@ELCore" , 
+		"version": "1.0.0" , 
+		"permissions": [
+			
+		]
+	} , 
+	"meta": {
+		"name": "DB Admin" , 
+		"icon": "app.png" , 
+		"description": "For Use by developers"
+	} , 
+	"events": {
+		
+	} , 
+	"drawer": {
+		"visible": true
+	} , 
+	"launch": "scripts/launch"	
+}

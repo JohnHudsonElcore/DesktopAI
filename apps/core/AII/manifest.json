@@ -1,0 +1,24 @@
+{
+	"module": {
+		"vendor": "John Hudson@ELCore" , 
+		"version": "1.0.0" , 
+		"permissions": [
+			
+		]
+	} , 
+	"meta": {
+		"name": "AI" , 
+		"icon": "app.png" , 
+		"description": "This is the core of the system"
+	} , 
+	"events": {
+		
+	} , 
+	"drawer": {
+		"visible": false
+	} , 
+	"launch": "scripts/launch" , 
+	"services": [
+		"scripts/commandlisten"
+	]
+}

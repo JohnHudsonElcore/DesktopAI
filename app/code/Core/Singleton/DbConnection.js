@@ -28,7 +28,15 @@ class DbConnection
 			console.log("CSTR: " + Buffer.from(out.stdout).toString('utf-8'));
 		}
 	}
+	changeDbOneQuery(schema)
+	{
+		let currDb = this.useDb;
 
+		this.useDb = schema;
+
+		this.needsChangingBack = true;
+		this.changeBackTo = currDb;
+	}
 	insert(tableName , data){
 		let qb = `INSERT INTO ${tableName} ( `;
 
@@ -93,6 +101,12 @@ class DbConnection
 		{
 			console.log("An Error Occured: " + e.toString());
 			return;
+		}
+		if(this.needsChangingBack)
+		{
+			this.useDb = this.changeBackTo;
+			delete this.changeBackTo;
+			delete this.needsChangingBack;
 		}
 		let res = Buffer.from(a.stdout);
 		let err = Buffer.from(a.stderr);

@@ -24,3 +24,6 @@ when you launch the software for the first time, an installation screen will sho
 Upon completion of installation, the app will close, in your console, just retype npm start.
 
 this will launch up the software
+
+## Keeping updated?
+Currently there is no in app "updator", by simply following the steps for installation, you can update the core files
